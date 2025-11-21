@@ -1,0 +1,133 @@
+package com.example.demo.entity;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+public class Departments {
+    private int id;
+    private String deptCode;
+    private String deptName;
+    private int parentId;
+    private int level;
+    private String path;
+    private int managerId;
+    private String contact;
+
+    private List<Departments> children = new ArrayList<>();
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDeptCode() {
+        return deptCode;
+    }
+
+    public void setDeptCode(String deptCode) {
+        this.deptCode = deptCode;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public int getManagerId() {
+        return managerId;
+    }
+
+    public void setManagerId(int managerId) {
+        this.managerId = managerId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public List<Departments> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Departments> children) {
+        this.children = children;
+    }
+
+    private int status;
+    private String createTime;
+    private String managerName;
+    private String managerUsername;
+
+
+    @Override
+    public String toString() {
+        return "Departments{" +
+                "id=" + id +
+                ", deptCode='" + deptCode + '\'' +
+                ", deptName='" + deptName + '\'' +
+                ", parentId=" + parentId +
+                ", level=" + level +
+                ", path='" + path + '\'' +
+                ", managerId=" + managerId +
+                ", contact='" + contact + '\'' +
+                ", status=" + status +
+                ", createTime='" + createTime + '\'' +
+                ", children=" + children +
+                '}';
+    }
+
+    public void setManagerName(String realName) {
+    }
+}

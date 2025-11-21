@@ -1,0 +1,84 @@
+package com.example.demo.controller.departments;
+
+
+import com.example.demo.entity.Departments;
+import com.example.demo.service.DepartmentsService;
+import com.example.demo.utils.R;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/departments")
+public class DepartmentsController {
+    @Autowired
+    DepartmentsService departmentsService;
+
+    @GetMapping("/list")
+    public R<List<Departments>> selectAllDepartments(){
+        List<Departments> departments=departmentsService.selectAllDepartments();
+        if (departments==null){
+            return R.success("暂无数据");
+        }
+        return R.success("查询成功",departments);
+    }
+
+    @PostMapping("/add")
+    public R<Object> addDepartments(@RequestBody Departments departments){
+        try {
+            if (departments.getDeptName()==null || departments.getDeptName().trim().isEmpty()){
+                return R.failed("分类名称不能为空");
+            }
+            int affectedRows = departmentsService.addDepartments(departments);
+            if (affectedRows == 0) {
+                return R.failed("添加失败");
+            }
+            return R.success("添加成功");
+        }catch (Exception e){
+            return R.failed("添加失败"+e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/del/{id}")
+    public R<Object> deleteDepartments(@PathVariable int id){
+        try{
+            int affectRows=departmentsService.deleteDepartments(id);
+            if (affectRows==0){
+                return R.failed("删除失败");
+            }
+            return R.success("删除成功");
+        }catch (Exception e){
+            return R.failed(e.getMessage());
+        }
+    }
+
+    @PutMapping("/update")
+    public R<Object> updateDepartments(@RequestBody Departments departments){
+        try {
+            if (departments.getDeptName()==null || departments.getDeptName().trim().isEmpty()){
+                return R.failed("部门名称不能为空");
+            }
+            int affectRows=departmentsService.updateDepartments(departments);
+            if (affectRows==0){
+                return R.failed("更新失败");
+            }
+            return R.success("更新成功");
+        }catch (Exception e){
+            return R.failed("更新失败"+e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public R<Departments> getDepartments(@PathVariable int id){
+        try{
+            Departments departments=departmentsService.getDepartmentsById(id);
+            if (departments==null){
+                return R.failed("分类不存在");
+            }
+            return R.success("查询成功",departments);
+        }catch (Exception e){
+            return R.failed("查询失败"+e.getMessage());
+        }
+    }
+}

@@ -1,0 +1,21 @@
+package com.example.demo.mapper;
+
+import com.example.demo.entity.Departments;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+
+@Mapper
+public interface DepartmentsMapper {
+    List<Departments> getDepartments();
+
+    int addDepartment(Departments departments);
+
+    int updateDepartment(Departments departments);
+
+    int deleteDepartment(int id);
+
+    List<Departments> selectAllDepartments();
+
+    Departments getDepartmentsById(int id);
+}

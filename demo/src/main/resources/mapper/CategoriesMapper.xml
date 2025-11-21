@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.CategoriesMapper">
+    <select id="selectAllCategories" resultType="com.example.demo.entity.Categories">
+        select *
+        from asset_categories
+    </select>
+
+    <insert id="addCategories" parameterType="com.example.demo.entity.Categories" useGeneratedKeys="true" keyProperty="id">
+         insert into asset_categories(parent_id, name, remark,create_time)
+         values (#{parentId}, #{name}, #{remark}, #{createTime})
+     </insert>
+
+    <update id="updateCategories" parameterType="com.example.demo.entity.Categories">
+         update asset_categories
+         set parent_id=#{parentId},
+             name=#{name},
+             remark=#{remark}
+         where id = #{id}
+    </update>
+
+    <delete id="deleteCategories" parameterType="int">
+        delete
+        from asset_categories
+        where id = #{id}
+    </delete>
+</mapper>

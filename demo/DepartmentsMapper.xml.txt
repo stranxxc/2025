@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.DepartmentsMapper">
+    <select id="selectAllDepartments" resultType="com.example.demo.entity.Departments">
+        select *
+        from asset_departments
+    </select>
+    <insert id="addDepartments" parameterType="com.example.demo.entity.Departments" useGeneratedKeys="true" keyProperty="id">
+        insert into asset_departments(dept_name,parent_id,manager_id,contact,status,,create_time)
+        values (#{deptName},#{parentId},#{managerId},#{contact},#{status},#{createTime})
+    </insert>
+    <update id="updateDepartments" parameterType="com.example.demo.entity.Departments">
+        update asset_departments
+        set dept_name=#{deptName},
+            parent_id=#{parentId}
+        where id=#{id}
+    </update>
+    <delete id="deleteDepartments" parameterType="int">
+        delete
+        from asset_departments
+        where id=#{id}
+    </delete>
+</mapper>

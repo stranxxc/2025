@@ -1,0 +1,90 @@
+package com.example.demo.service;
+
+import com.example.demo.entity.Departments;
+import com.example.demo.mapper.DepartmentsMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class DepartmentsService {
+    @Autowired
+    private DepartmentsMapper departmentsMapper;
+
+    public List<Departments> selectAllDepartments() {
+        List<Departments> departments = departmentsMapper.selectAllDepartments();
+        System.out.println("从数据库中获取的分类数据量" + departments.size());
+
+        List<Departments> roots = new ArrayList<>();
+        HashMap<Integer, Departments> cateMap = new HashMap<>();
+
+        // 第一次遍历：将所有部门放入map
+        departments.forEach(item -> {
+            cateMap.put(item.getId(), item);
+            // 初始化子部门列表
+            if (item.getChildren() == null) {
+                item.setChildren(new ArrayList<>());
+            }
+        });
+
+        // 第二次遍历：构建树形结构
+        departments.forEach(item -> {
+            if (item.getParentId() == 0) {
+                roots.add(item);
+            } else {
+                Departments parent = cateMap.get(item.getParentId());
+                if (parent != null) {
+                    if (parent.getChildren() == null) {
+                        parent.setChildren(new ArrayList<>());
+                    }
+                    parent.getChildren().add(item);
+                }
+            }
+        });
+        return roots;
+    }
+
+    public int addDepartments(Departments departments) {
+        LocalDateTime now = LocalDateTime.now();
+        departments.setCreateTime(String.valueOf(now));
+        return departmentsMapper.addDepartment(departments);
+    }
+
+    public int deleteDepartments(int id) {
+        List<Departments> allDepartments = departmentsMapper.selectAllDepartments();
+        boolean hasChildren = allDepartments.stream()
+                .anyMatch(dept -> dept.getParentId() != null && dept.getParentId() == id);
+        if (hasChildren) {
+            throw new RuntimeException("该分类下存在子分类，请先删除子分类");
+        }
+        return departmentsMapper.deleteDepartment(id);
+    }
+
+    public Departments getDepartmentsById(int id) {
+        List<Departments> allDepartments = departmentsMapper.selectAllDepartments();
+        Optional<Departments> result = allDepartments.stream()
+                .filter(departments -> departments.getId() != null && departments.getId().equals(id))
+                .findFirst();
+        return result.orElse(null);
+    }
+
+    public int updateDepartments(Departments departments) {
+        // 检查部门是否存在
+        Departments existingDept = getDepartmentsById(departments.getId());
+        if (existingDept == null) {
+            throw new RuntimeException("部门不存在");
+        }
+
+        // 检查父部门不能是自己
+        if (departments.getParentId() != null && departments.getParentId().equals(departments.getId())) {
+            throw new RuntimeException("父部门不能是自己");
+        }
+
+        return departmentsMapper.updateDepartment(departments);
+    }
+}
